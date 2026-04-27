@@ -1,8 +1,11 @@
 streamlit
-geopandas
 pandas
-matplotlib
 numpy
+matplotlib
+altair
 folium
 streamlit-folium
-altair
+geopandas
+pyproj
+shapely
+fiona

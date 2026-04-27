@@ -5,6 +5,13 @@ from folium import plugins
 from streamlit_folium import st_folium
 import pandas as pd
 
+@st.cache_data
+def load_geojson(path):
+    gdf = gpd.read_file(path)
+    gdf["community"] = gdf["community"].str.title()
+    return gdf
+
+
 # Available years
 years = {
     '1990': 'GeoJSONs/LUI1990g.geojson',
@@ -21,7 +28,7 @@ st.sidebar.header("Map Controls")
 selected_year = st.sidebar.selectbox("Select Year:", list(years.keys()))
 
 # Load data
-gdf = gpd.read_file(years[selected_year])
+gdf = load_geojson(years[selected_year])
 
 # Ensure numeric types for all land use columns
 land_use_columns = [

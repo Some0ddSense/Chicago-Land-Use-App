@@ -6,6 +6,13 @@ import matplotlib.cm as cm
 import numpy as np
 import altair as alt
 
+@st.cache_data
+def load_geojson(path):
+    gdf = gpd.read_file(path)
+    gdf["community"] = gdf["community"].str.title()
+    return gdf
+
+
 # Year selection only
 years = {
     '1990': 'GeoJSONs/LUI1990g.geojson',
@@ -18,8 +25,7 @@ years = {
 }
 
 selected_year = st.sidebar.selectbox("Select Year:", list(years.keys()))
-gdf = gpd.read_file(years[selected_year])
-gdf["community"] = gdf["community"].str.title()
+gdf = load_geojson(years[selected_year])
 
 # Land use groups
 land_use_columns = [
@@ -110,8 +116,7 @@ selected_lu = st.selectbox("Select Land Use Category for Trend:", land_use_colum
 trend_records = []
 
 for yr, path in years.items():
-    gdf_year = gpd.read_file(path)
-    gdf_year["community"] = gdf_year["community"].str.title()
+    gdf_year = load_geojson(path)
 
     if selected_area == "Total":
         totals_year = gdf_year[land_use_columns].sum()

@@ -4,6 +4,12 @@ import pandas as pd
 import folium
 from streamlit_folium import st_folium
 
+@st.cache_data
+def load_geojson(path):
+    gdf = gpd.read_file(path)
+    gdf["community"] = gdf["community"].str.title()
+    return gdf
+
 st.title("Land Use Change Analysis (1990–2023)")
 
 # Available years
@@ -36,8 +42,8 @@ if year_a == year_b:
     st.stop()
 
 # Load both years
-gdf_a = gpd.read_file(years[year_a])
-gdf_b = gpd.read_file(years[year_b])
+gdf_a = load_geojson(years[year_a])
+gdf_b = load_geojson(years[year_b])
 
 # Ensure numeric
 for col in land_use_columns + ["Total"]:
